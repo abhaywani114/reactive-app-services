@@ -1,18 +1,22 @@
-import { FlatList, Modal, StyleSheet, Text, View, TouchableOpacity, TextInput, KeyboardAvoidingView, ScrollView } from "react-native";
+import { FlatList, Modal, StyleSheet, Text, View, TouchableOpacity, TextInput, KeyboardAvoidingView, ScrollView, ToastAndroid } from "react-native";
 import CalendarPicker from "react-native-calendar-picker"
 import BackArrow from "../../components/Back";
 import Heading from "../../components/Heading";
 import colors from "../../utils/colors";
 import { useEffect, useState } from "react";
 import getTimeStamps from "../../utils/getTimeStamps";
+import ContentApi from "../../utils/ContentApi";
+import { useUser } from "@clerk/clerk-expo";
 
 
 
-const BookingModel = ({showModel, bookNow}) => {
+const BookingModel = ({showModel, bookNow, businessId}) => {
     const [selectedDate, setSelectedDate] = useState()
     const [selectedTime, setSelectedTime] = useState()
     const [timeStamps, setTimeStamps] = useState() 
+    const { user } = useUser()
     const [note, setNote] = useState() 
+
     useEffect(() => {
         setTimeStamps(getTimeStamps())
     },[])
@@ -21,6 +25,26 @@ const BookingModel = ({showModel, bookNow}) => {
         setSelectedDate(date)
     }
 
+    const confirmBookHandle = () => {
+        if (!selectedDate || !selectedTime) {
+            ToastAndroid.show("Select date and time", ToastAndroid.LONG)
+            return;
+        }
+
+        ContentApi.addBooking({
+            userName: user.fullName,
+            userEmail: user.primaryEmailAddress.emailAddress,
+            date: selectedDate.toString(),
+            time: selectedTime,
+            businessId: businessId,
+        }).then(() => {
+            ToastAndroid.show("Booking added sucessfully", ToastAndroid.LONG)
+            bookNow()
+        }).catch( (err) => {
+            ToastAndroid.show("Some error occured", ToastAndroid.LONG)
+            console.error(err)
+        })
+    }
     return (
         <Modal
             animationType="slide"
@@ -67,7 +91,7 @@ const BookingModel = ({showModel, bookNow}) => {
                     />
                 </View>
                 <View>
-                    <TouchableOpacity style={style.btnWrapper}>
+                    <TouchableOpacity style={style.btnWrapper} onPress={confirmBookHandle}>
                         <Text style={style.btnText}>Confirm & Book</Text>
                     </TouchableOpacity>
                 </View>

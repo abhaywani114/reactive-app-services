@@ -56,10 +56,11 @@ const getBusinessListByCategory = async (category) => {
   const query = gql`
   query MyQuery {
     businessLists(where: {category: {name: "${category}"}}) {
+      id
       name
-      conactPerson,
-      address,
-      description,
+      conactPerson
+      address
+      description
       image {
         url
       }
@@ -73,9 +74,33 @@ const getBusinessListByCategory = async (category) => {
   return data
 }
 
+const addBooking = async ({userName, userEmail, date, time, businessId}) => {
+  const mutation = gql`
+  mutation AddBooking {
+    createBooking(
+      data: {
+        bookingStatus: Booked, 
+        userName: "${userName}", 
+        userEmail: "${userEmail}", 
+        date: "${date}",
+        time: "${time}", 
+        businessList: {connect: {id: "${businessId}"}}}
+    ) {
+      id
+    }
+    publishManyBookings(to: PUBLISHED) {
+      count
+    }
+  }
+  `
+
+  const data = await request(constants.ContentAPIEndPoint, mutation)
+  return data
+}
 export default {
     getSlider,
     getCategories,
     getBussinessList,
-    getBusinessListByCategory
+    getBusinessListByCategory,
+    addBooking
 }

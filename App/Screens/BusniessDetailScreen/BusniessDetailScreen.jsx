@@ -43,7 +43,7 @@ const BusniessDetailScreen = () => {
                 <TouchableOpacity style={style.btn1}><Text style={style.bt1Text}>Message</Text></TouchableOpacity>
                 <TouchableOpacity style={style.btn2}  onPress={bookNow}><Text style={style.bt2Text}>Book Now</Text></TouchableOpacity>
             </View>
-            <BookingModel showModel={showModel} bookNow={bookNow} />
+            <BookingModel showModel={showModel} bookNow={bookNow} businessId={business.id}/>
         </View>
     )
 }
