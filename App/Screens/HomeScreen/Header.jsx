@@ -2,10 +2,20 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput } from "reac
 import { useAuth, useUser } from "@clerk/clerk-expo"
 import { Feather } from '@expo/vector-icons';
 import colors from "../../utils/colors"
+import { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 
 const Header = () => {
     const { user, isLoading  } = useUser()
-    const { signOut } = useAuth()
+    const [searchQuery, setSearchQuery] = useState('')
+    const navigator = useNavigation()
+    const { signOut } = useAuth();
+    const onSearchClick = () => {
+        navigator.navigate("search-screen", {
+            searchQuery
+        });
+        setSearchQuery("")
+    }
     return user && (
         <View style={style.mainWrapper}>
             <View style={{display: 'flex', flexDirection:'row', gap: 20, alignItems: 'center'}}>
@@ -21,8 +31,8 @@ const Header = () => {
                 </TouchableOpacity>
             </View>
             <View style={style.searchHolder}>
-                <TextInput placeholder="Search..." style={style.search} />
-                <TouchableOpacity style={style.searchBtn}>
+                <TextInput placeholder="Search..." style={style.search} value={searchQuery} onChangeText={(t) => setSearchQuery(t)} />
+                <TouchableOpacity style={style.searchBtn} onPress={onSearchClick}>
                     <Feather name="search" size={20} color={colors.PRIMARY} />
                 </TouchableOpacity>
             </View>

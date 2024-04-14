@@ -125,11 +125,33 @@ const getMyBookings = async (email) => {
   return data
 }
 
+const searchQuery = async (st) => {
+  const query = gql`
+  query MyQuery {
+    businessLists(where: {category: {_search: "${st}"}}) {
+      id
+      name
+      conactPerson
+      address
+      description
+      image {
+        url
+      }
+      category {
+        name
+      }
+    }
+  }`
+  const data = await request(constants.ContentAPIEndPoint, query)
+  return data
+}
+
 export default {
     getSlider,
     getCategories,
     getBussinessList,
     getBusinessListByCategory,
     addBooking,
-    getMyBookings
+    getMyBookings,
+    searchQuery
 }

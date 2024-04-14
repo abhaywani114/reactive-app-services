@@ -30,7 +30,7 @@ const BusinessListByCategory = () => {
     )
 }
 
-const BusinessListItems = ({item}) => {
+export const BusinessListItems = ({item}) => {
     const navigator = useNavigation()
     const gotoBussniessDetail = () => {
         navigator.navigate("business-detail", {
