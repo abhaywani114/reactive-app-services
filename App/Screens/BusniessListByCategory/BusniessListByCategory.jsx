@@ -3,8 +3,8 @@ import { useEffect, useState } from "react"
 import { FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { Entypo } from '@expo/vector-icons';
 import ContentApi from "../../utils/ContentApi"
-import { Ionicons } from '@expo/vector-icons';
 import colors from "../../utils/colors";
+import BackArrow from "../../components/Back";
 
 const BusinessListByCategory = () => {
     const { params }  = useRoute()
@@ -14,17 +14,11 @@ const BusinessListByCategory = () => {
     useEffect(() => {
         const { category } = params
         category && ContentApi.getBusinessListByCategory(category).then((d) => setDataBusinessList(d.businessLists)).catch(err => console.error(err))
-        console.log(dataBusinessList)
     },[params])
 
     return dataBusinessList.length > 0 && (
         <View style={{padding: 20, paddingHorizontal: 15}}>
-            <View style={style.arrowWrapper}>
-               <TouchableOpacity onPress={() => navigator.goBack()}>
-                    <Ionicons name="arrow-back-sharp" size={24} color={colors.PRIMARY} />
-                </TouchableOpacity>
-               <Text style={style.textHeading}>{params?.category}</Text>
-            </View>
+            <BackArrow heading={params.category} back={() => navigator.goBack()} />
             <ScrollView>
                 <FlatList 
                     data={dataBusinessList}
@@ -37,8 +31,14 @@ const BusinessListByCategory = () => {
 }
 
 const BusinessListItems = ({item}) => {
+    const navigator = useNavigation()
+    const gotoBussniessDetail = () => {
+        navigator.navigate("business-detail", {
+            businessDetail: item
+        })
+    }
     return (
-        <View style={style.listWrapper}>
+        <TouchableOpacity style={style.listWrapper} onPress={gotoBussniessDetail}>
             <Image
                 source={{uri: item?.image[0]?.url}}
                 style={style.image}
@@ -51,22 +51,11 @@ const BusinessListItems = ({item}) => {
                     <Text> { item?.address }</Text>
                 </Text>
             </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 
 const style = StyleSheet.create({
-    arrowWrapper : {
-        display: 'flex',
-        gap: 10,
-        alignItems: 'center',
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-    },
-    textHeading: {
-        fontWeight: 'bold',
-        fontSize: 17
-    },
     listWrapper: {
         flexDirection: 'row',
         gap: 15,

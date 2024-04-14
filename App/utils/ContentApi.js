@@ -59,6 +59,7 @@ const getBusinessListByCategory = async (category) => {
       name
       conactPerson,
       address,
+      description,
       image {
         url
       }
