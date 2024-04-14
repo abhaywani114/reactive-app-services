@@ -37,8 +37,11 @@ const getBussinessList = async () => {
   const query = gql`
   query MyQuery {
     businessLists {
+      id
       name
       conactPerson
+      address
+      description
       image {
         url
       }

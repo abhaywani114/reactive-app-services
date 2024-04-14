@@ -16,7 +16,7 @@ const BusinessListByCategory = () => {
         category && ContentApi.getBusinessListByCategory(category).then((d) => setDataBusinessList(d.businessLists)).catch(err => console.error(err))
     },[params])
 
-    return dataBusinessList.length > 0 && (
+    return  (
         <View style={{padding: 20, paddingHorizontal: 15}}>
             <BackArrow heading={params.category} back={() => navigator.goBack()} />
             <ScrollView>

@@ -1,20 +1,26 @@
-import { FlatList, Image, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native"
+import { FlatList, Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import Heading from "../../components/Heading"
 import { useEffect, useState } from "react"
 import ContentApi from "../../utils/ContentApi"
 import colors from "../../utils/colors"
+import { useNavigation } from "@react-navigation/native"
 
 
-const BusinessListItem = ({ item }) => {
+const BusinessListItem = ({ item, navigator }) => {
+    const gotoBussniessDetail = () => {
+        navigator.navigate("business-detail", {
+            businessDetail: item
+        })
+    }
     return  (
-        <View style={style.imageWrapper}>
+        <TouchableOpacity style={style.imageWrapper} onPress={gotoBussniessDetail} activeOpacity={0.8} >
             <Image style={style.image} source={{uri: item?.image[0]?.url}} />
             <View>
                 <Text style={style.text.serviceName}>{item?.name}</Text>
                 <Text style={style.text.conactPerson}>{item?.conactPerson}</Text>
                 <Text style={style.text.categories}>{item?.category?.name}</Text>
             </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 
@@ -23,6 +29,7 @@ const BusinessList  = () => {
     useEffect(() => {
         ContentApi.getBussinessList().then((d) => setBusinessListData(d.businessLists)).catch( err => console.error(err))
     },[])
+    const navigator = useNavigation()
     return (
         <View style={{marginTop: 10}}>
             <Heading text={"Latest Business Services"} />
@@ -31,7 +38,7 @@ const BusinessList  = () => {
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={{marginBottom: 150}}
-                renderItem={({item, key}) => <BusinessListItem item={item} />}
+                renderItem={({item, key}) => <BusinessListItem item={item} navigator={navigator} />}
                 />
         </View>
     )
