@@ -97,10 +97,36 @@ const addBooking = async ({userName, userEmail, date, time, businessId}) => {
   const data = await request(constants.ContentAPIEndPoint, mutation)
   return data
 }
+
+const getMyBookings = async (email) => {
+  const query = gql`
+  query MyQuery {
+    bookings(where: {userEmail: "${email}"}) {
+      userEmail
+      userName
+      id
+      date
+      time
+      bookingStatus
+      businessList {
+        conactPerson
+        name
+        image {
+          url
+        }
+      }
+    }
+  }
+  `
+  const data = await request(constants.ContentAPIEndPoint, query)
+  return data
+}
+
 export default {
     getSlider,
     getCategories,
     getBussinessList,
     getBusinessListByCategory,
-    addBooking
+    addBooking,
+    getMyBookings
 }

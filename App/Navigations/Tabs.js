@@ -1,6 +1,7 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import HomeScreen from "./../Screens/HomeScreen/Home"
+import BookingScreen from "./../Screens/BookingScreen/BookingScreen"
 import { Feather } from '@expo/vector-icons';
 import Colors  from './../utils/colors';
 import HomeNavigation from './HomeNavigation';
@@ -18,7 +19,7 @@ function Tabs() {
           <Tab.Screen name="HomeNavigation" component={HomeNavigation} options={{
             tabBarIcon: (color,size) => (<Feather name="home" size={20} color={color} />)
             }}  />
-          <Tab.Screen name="Booking" component={HomeScreen} options={{
+          <Tab.Screen name="Booking" component={BookingScreen} options={{
             tabBarIcon: (color, size) => (<Feather name="truck" size={20} color={color}  />)
             }} />
           <Tab.Screen name="Profile" component={HomeScreen} options={{
